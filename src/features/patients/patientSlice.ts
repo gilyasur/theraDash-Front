@@ -1,20 +1,21 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { patient } from './patientAPI';
+import getPatient from './patientAPI';
 
 
-export interface patientState {
+
+export interface IpatientState {
   
 }
 
-const initialState: patientState = {
+const initialState: IpatientState = {
    
 };
 
 export const patientAsync = createAsyncThunk(
   'patient/patient',
   async (credentials: { username: string; password: string }) => {
-    const response = await patient(credentials);
+    const response = await getPatient(credentials);
     return response.data;
   }
 );

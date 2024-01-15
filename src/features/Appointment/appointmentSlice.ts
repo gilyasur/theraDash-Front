@@ -1,40 +1,82 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { patient } from '../patients/patientAPI';
-import { getAppointment} from './appointmentAPI ';
+import getAppointments from './appointmentAPI ';
+import { selectToken } from '../login/loginSlice';
 
 
-export interface appointmentState {
-  
+
+interface IAppointment {
+  id: number;
+  recurring_frequency: string;
+  day_of_week?: string | null;
+  time_of_day: string;
+  location?: string | null;
+  notes?: string | null;
+  created_at: string;
+  updated_at: string;
+  therapist: {
+    username: string;
+  };
+  patient: {
+    first_name: string;
+    last_name : string;
+  };
 }
 
-const initialState: appointmentState = {
-   
+export interface IAppointmentState {
+  appointments: IAppointment[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
+const initialState: IAppointmentState = {
+  appointments: [],
+  status: 'idle',
+  error: null,
 };
 
-export const appointmentAsync = createAsyncThunk(
-  'appointment/appointment',
-  async (credentials: { username: string; password: string }) => {
-    const response = await getAppointment(credentials);
-    return response.data;
+
+// const token = sessionStorage.getItem('token');
+
+export const fetchAppointments = createAsyncThunk<IAppointment[], void>(
+  "appointments/fetchAppointments",
+  async (_, { getState }) => {
+    const token = selectToken(getState() as RootState);
+    if (!token) {
+      throw new Error("Token not found");
+    }
+
+    const response = (await getAppointments(token)) as IAppointment[];
+    return response; // Return the array directly
   }
 );
 
-export const appointmentSlice = createSlice({
-  name: 'appointment',
+
+
+const appointmentsSlice = createSlice({
+  name: 'appointments',
   initialState,
-  reducers: {
-    
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-     
-    
+      .addCase(fetchAppointments.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchAppointments.fulfilled, (state, action) => {
+
+        state.status = 'succeeded';
+        state.appointments = action.payload; // Corrected this line
+      })
+      .addCase(fetchAppointments.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      });
   },
 });
 
+export const selectAppointments = (state: RootState) => state.appointment.appointments;
+export const selectAppointmentsStatus = (state: RootState) => state.appointment.status;
+export const selectAppointmentsError = (state: RootState) => state.appointment.error;
 
-export const selectstatus = (state: RootState) => state.login.status;
-export const selectLogged = (state: RootState) => state.login.logged;
-export const selectToken = (state: RootState) => state.login.token;
-export default appointmentSlice.reducer;
+
+export default appointmentsSlice.reducer;
