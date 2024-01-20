@@ -5,6 +5,10 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Patient } from './features/patients/Patient';
+import Appointment from './features/Appointment/Appointment';
+import { MainPreSite } from './features/Presite/MainPreSite';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -12,7 +16,20 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          
+          <Route path="/" element={<MainPreSite />}>
+          </Route>
+          <Route path="/App" element={<App />} >
+          <Route path="patients" element={<Patient />} />
+          <Route path="appointments" element={<Appointment />} />
+          
+          </Route>
+          <Route path="*" element={<p>There's nothing here: 404!</p>} />
+
+        </Routes>
+      </BrowserRouter>
     </Provider>
   </React.StrictMode>
 );

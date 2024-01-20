@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import getAppointments from './appointmentAPI ';
-import { selectToken } from '../login/loginSlice';
+
 
 
 
@@ -38,17 +38,23 @@ const initialState: IAppointmentState = {
 
 // const token = sessionStorage.getItem('token');
 
-export const fetchAppointments = createAsyncThunk<IAppointment[], void>(
+export const fetchAppointments = createAsyncThunk<IAppointment[], string>(
   "appointments/fetchAppointments",
-  async (_, { getState }) => {
-    const token = selectToken(getState() as RootState);
+  async (token) => {    
     if (!token) {
       throw new Error("Token not found");
     }
+    try{
 
-    const response = (await getAppointments(token)) as IAppointment[];
+    const response = (await getAppointments(token))
     return response; // Return the array directly
+  }catch (error) {
+    console.log("error in fetch Appointments", error);
+    throw error
+    
   }
+}
+
 );
 
 

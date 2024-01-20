@@ -1,8 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
-import loginReducer from '../features/login/loginSlice';
+import loginReducer from '../features/Presite/login/loginSlice';
 
-import appointmentReducer, { IAppointmentState } from '../features/Appointment/appointmentSlice';
+import appointmentReducer from '../features/Appointment/appointmentSlice';
+import patientReducer from '../features/patients/patientSlice';
 
 export const store = configureStore({
   
@@ -10,6 +11,7 @@ export const store = configureStore({
     counter: counterReducer,
     login: loginReducer,
     appointment: appointmentReducer,
+    patient:patientReducer
   },
 });
 

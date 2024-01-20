@@ -2,11 +2,12 @@ import React from 'react';
 
 
 import './App.css';
-import { Login } from './features/login/Login';
+
 import { useAppSelector } from './app/hooks';
-import { selectLogged } from './features/login/loginSlice';
-import { Patient } from './features/patients/Patient';
-import Appointment from './features/Appointment/Appointment';
+import { selectLogged } from './features/Presite/login/loginSlice';
+
+
+import { Link, Outlet } from 'react-router-dom';
 
 
 function App() {
@@ -14,8 +15,10 @@ function App() {
   return (
     
     <div className="App">
-      <div> {logged ? <Appointment></Appointment> : <div>shigaonno</div>}</div>
-<Login></Login>
+<Link to="patients">Patients</Link>
+<Link to="appointments">Appointments</Link>
+<Outlet></Outlet>
+
     </div>
   );
 }
