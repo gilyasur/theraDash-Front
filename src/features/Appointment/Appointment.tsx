@@ -42,10 +42,7 @@ const Appointment: React.FC = () => {
               <div key={index}>
                 <p>Therapist: {appointment.therapist.username}</p>
                 <p>Patient: {appointment.patient.first_name} {appointment.patient.last_name}</p>
-                <p>Recurring Frequency: {appointment.recurring_frequency}</p>
-                <p>Day of Week: {appointment.day_of_week}</p>
                 <p>Time of Day: {appointment.time_of_day}</p>
-                <p>Location: {appointment.location}</p>
                 <p>Notes: {appointment.notes}</p>
 
                 <hr />

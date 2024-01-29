@@ -7,10 +7,8 @@ import getAppointments from './appointmentAPI ';
 
 interface IAppointment {
   id: number;
-  recurring_frequency: string;
-  day_of_week?: string | null;
+  occurrence_date: string;
   time_of_day: string;
-  location?: string | null;
   notes?: string | null;
   created_at: string;
   updated_at: string;
@@ -18,8 +16,20 @@ interface IAppointment {
     username: string;
   };
   patient: {
+    id: number
     first_name: string;
     last_name : string;
+    email : string;
+    phone_number: string;
+    date_of_birth : string
+    address : string;
+    created_at: string;
+    updated_at : string;
+    day_of_week: string;
+    recurring_frequency: string;
+    canceled: string;
+    cancellation_reason: string;
+    price:number ;
   };
 }
 
@@ -36,7 +46,7 @@ const initialState: IAppointmentState = {
 };
 
 
-// const token = sessionStorage.getItem('token');
+// const token = localStorage.getItem('token');
 
 export const fetchAppointments = createAsyncThunk<IAppointment[], string>(
   "appointments/fetchAppointments",

@@ -13,6 +13,7 @@ export interface loginState {
   // Add additional fields for custom claims
   userfirstName?: string;
   userlastName?: string;
+  userEmail?: string;
 }
 
 const initialState: loginState = {
@@ -24,6 +25,7 @@ const initialState: loginState = {
   // Initialize additional fields
   userfirstName: undefined,
   userlastName: undefined,
+  userEmail: undefined,
 };
 
 
@@ -45,21 +47,21 @@ export const loginSlice = createSlice({
       .addCase(loginAsync.fulfilled, (state, action) => {
         // Assuming your server response includes custom claims like 'first_name' and 'last_name'
         state.token = action.payload.access;
-        const decodedToken: any = jwtDecode(state.token);
-
-
-
-        
+        const decodedToken: any = jwtDecode(state.token);        
         state.logged = true;
         state.status = 'loading';
         state.userfirstName = decodedToken.first_name;
         state.userlastName = decodedToken.last_name;
+        state.userEmail = decodedToken.email;
+        console.log(decodedToken.email);
+        
         
 
-        // Store the token and additional data in sessionStorage
-        sessionStorage.setItem('token', JSON.stringify(state.token));
-        sessionStorage.setItem('firstName', JSON.stringify(state.userfirstName));
-        sessionStorage.setItem('lastName', JSON.stringify(state.userlastName));
+        // Store the token and additional data in localStorage
+        localStorage.setItem('token', JSON.stringify(state.token));
+        localStorage.setItem('firstName', JSON.stringify(state.userfirstName));
+        localStorage.setItem('lastName', JSON.stringify(state.userlastName));
+        localStorage.setItem('emai', JSON.stringify(state.userEmail));
       })
       .addCase(loginAsync.rejected, (state, action) => {
         // Assuming you have an API call rejection for an expired token scenario
@@ -69,9 +71,11 @@ export const loginSlice = createSlice({
           state.status = 'idle';
           state.userfirstName = undefined; // Clear the additional data
           state.userlastName = undefined;
-          sessionStorage.removeItem('token'); // Remove the token from sessionStorage
-          sessionStorage.removeItem('firstName');
-          sessionStorage.removeItem('lastName');
+          state.userEmail = undefined;
+          localStorage.removeItem('token'); // Remove the token from localStorage
+          localStorage.removeItem('firstName');
+          localStorage.removeItem('lastName');
+          localStorage.removeItem('email');
         }
       });
   },
@@ -82,5 +86,6 @@ export const selectLogged = (state: RootState) => state.login.logged;
 export const selectToken = (state: RootState) => state.login.token;
 export const selectFirstName = (state: RootState) => state.login.userfirstName;
 export const selectLastName = (state: RootState) => state.login.userlastName;
+export const selectuserEmail = (state: RootState) => state.login.userEmail;
 
 export default loginSlice.reducer;

@@ -9,6 +9,8 @@ import {
   selectPatientsError,
   selectPatientsStatus,
 } from "./patientSlice";
+import styles from "../patients/patient.module.css"
+
 
 export function Patient() {
   const dispatch = useDispatch<ThunkDispatch<any, void, AnyAction>>(); // Explicitly type dispatch
@@ -38,20 +40,25 @@ export function Patient() {
     <div>
       <h1>Patients</h1>
       {userFirstName}
-      {patients && patients.length > 0 ? (
-        patients.map((patient, index) => (
-          <div key={index}>
-
-            <p>Patient: {patient.first_name} {patient.last_name}</p>
-
-            <hr />
-          </div>
-        ))
-      ) : (
-        <div>No appointments available</div>
-      )}
-      
+      <div className={styles.patientCards}>
+        {patients && patients.length > 0 ? (
+          patients.map((patient, index) => (
+            <div key={index} className={styles.patientCard}>
+              <p>
+                Patient: {patient.first_name} {patient.last_name}
+              </p>
+              <p>Email: {patient.email}</p>
+              <p>Phone Number: {patient.phone_number}</p>
+              <p>Date of Birth: {patient.date_of_birth}</p>
+              <p>Address: {patient.address}</p>
+              <hr />
+            </div>
+          ))
+        ) : (
+          <div>No appointments available</div>
+        )}
+      </div>
     </div>
   );
-};
+}
 

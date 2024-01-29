@@ -1,0 +1,21 @@
+/* Patient.css */
+
+.patientCards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .patientCard {
+    background-color: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+  }
+  
+  .patient-card p {
+    margin: 8px 0;
+  }
+  
