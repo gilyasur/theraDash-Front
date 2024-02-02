@@ -30,7 +30,7 @@ export function Header() {
     lastName: userLastName,
     email: userEmail,
   };
-  const tabs = ['Patients', 'Appointments', 'Payments', 'Calendar'];
+  const tabs = ['Patients', 'Appointments', 'Payments', 'Calendar', 'Reports'];
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);

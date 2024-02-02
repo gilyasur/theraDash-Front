@@ -5,7 +5,7 @@ import getAppointments from './appointmentAPI ';
 
 
 
-interface IAppointment {
+export interface IAppointment {
   id: number;
   occurrence_date: string;
   time_of_day: string;
