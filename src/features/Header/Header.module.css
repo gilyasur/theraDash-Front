@@ -1,31 +1,31 @@
 .header {
-  padding-top: var(--mantine-spacing-sm);
-  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-  border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-2), transparent);
-  margin-bottom: rem(120px);
+  padding-top: 8px; /* Replace with the actual value for --mantine-spacing-sm */
+  background-color: #feedd3; /* Replace with the actual value for --mantine-color-gray-0 */
+  border-bottom: 1px solid #d2d8e0; /* Replace with the actual value for --mantine-color-gray-2 */
+  margin-bottom: 30px; /* Replace with the actual value for --mantine-spacing-sm */
 }
 
 .mainSection {
-  padding-bottom: var(--mantine-spacing-sm);
+  padding-bottom: 8px; /* Replace with the actual value for --mantine-spacing-sm */
 }
 
 .user {
-  color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
-  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
-  border-radius: var(--mantine-radius-sm);
+  color: #000000; /* Replace with the actual value for --mantine-color-black */
+  padding: 4px 8px; /* Replace with the actual values for --mantine-spacing-xs and --mantine-spacing-sm */
+  border-radius: 4px; /* Replace with the actual value for --mantine-radius-sm */
   transition: background-color 100ms ease;
 
   &:hover {
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+    background-color: #ffffff; /* Replace with the actual value for --mantine-color-white */
   }
 
-  @media (max-width: $mantine-breakpoint-xs) {
+  @media (max-width: 576px) {
     display: none;
   }
 }
 
 .userActive {
-  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+  background-color: #ffffff; /* Replace with the actual value for --mantine-color-white */
 }
 
 .tabsList {
@@ -36,26 +36,25 @@
 
 .tab {
   font-weight: 500;
-  height: rem(38);
+  height: 38px; /* Replace with the actual value for rem(38) */
   background-color: transparent;
   position: relative;
   bottom: -1px;
 
   &::before,
   &::after {
-    background-color: light-dark(
-      var(--mantine-color-gray-2),
-      var(--mantine-color-dark-7)
-    ) !important;
+    background-color: #d2d8e0; /* Replace with the actual value for --mantine-color-gray-2 */
   }
 
   &:hover {
-    background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+    background-color: #edf1f7; /* Replace with the actual value for --mantine-color-gray-1 */
   }
 
   &[data-active] {
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-    border-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7));
+    background-color: #ffffff; /* Replace with the actual value for --mantine-color-white */
+    border-color: #d2d8e0; /* Replace with the actual value for --mantine-color-gray-2 */
     border-bottom-color: transparent;
   }
 }
+
+

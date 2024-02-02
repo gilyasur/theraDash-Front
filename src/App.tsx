@@ -9,7 +9,7 @@ import { selectLogged } from './features/Presite/login/loginSlice';
 
 import { Link, Outlet } from 'react-router-dom';
 import { Dashboard } from './features/Dashboard/Dashboard';
-import '@mantine/core/styles.css';
+
 
 
 function App() {

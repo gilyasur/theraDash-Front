@@ -4,18 +4,24 @@
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
+    
+    
   }
   
   .patientCard {
-    background-color: #ffffff;
+    background-color: #B5DBCF;
     border: 1px solid #e1e1e1;
     border-radius: 8px;
     padding: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 300px;
+    box-shadow: 10px 5px 5px lightgray;
+    color: black;
+    -webkit-text-stroke: 0.3px white;
+    font-size: larger;
   }
   
   .patient-card p {
     margin: 8px 0;
+    
   }
-  

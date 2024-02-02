@@ -38,8 +38,9 @@ export function Patient() {
 
   return (
     <div>
-      <h1>Patients</h1>
-      {userFirstName}
+     
+      <h1 style={{color:"white"}}>Patients</h1>
+      {/* {userFirstName} */}
       <div className={styles.patientCards}>
         {patients && patients.length > 0 ? (
           patients.map((patient, index) => (

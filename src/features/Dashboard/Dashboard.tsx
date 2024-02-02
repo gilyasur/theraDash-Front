@@ -16,7 +16,7 @@ export function Dashboard() {
         <div>
             
  <Header></Header>
-
+ <Outlet></Outlet>
         </div>
     );
 }
