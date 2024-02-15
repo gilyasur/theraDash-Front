@@ -1,31 +1,30 @@
 .header {
-  padding-top: 8px; /* Replace with the actual value for --mantine-spacing-sm */
-  background-color: #feedd3; /* Replace with the actual value for --mantine-color-gray-0 */
-  border-bottom: 1px solid #d2d8e0; /* Replace with the actual value for --mantine-color-gray-2 */
-  margin-bottom: 30px; /* Replace with the actual value for --mantine-spacing-sm */
+  padding-top: 8px; 
+  background-color: #FFF8E3;
+  border-bottom: 1px solid #d2d8e0; 
+  margin-bottom: 30px; 
 }
 
 .mainSection {
-  padding-bottom: 8px; /* Replace with the actual value for --mantine-spacing-sm */
+  padding-bottom: 8px;
 }
 
 .user {
-  color: #000000; /* Replace with the actual value for --mantine-color-black */
-  padding: 4px 8px; /* Replace with the actual values for --mantine-spacing-xs and --mantine-spacing-sm */
-  border-radius: 4px; /* Replace with the actual value for --mantine-radius-sm */
+  color: #000000; 
+  padding: 4px 8px;
+  border-radius: 4px;
   transition: background-color 100ms ease;
 
   &:hover {
-    background-color: #ffffff; /* Replace with the actual value for --mantine-color-white */
-  }
+    background-color: #ffffff; 
 
   @media (max-width: 576px) {
     display: none;
   }
 }
-
+}
 .userActive {
-  background-color: #ffffff; /* Replace with the actual value for --mantine-color-white */
+  background-color: #ffffff;
 }
 
 .tabsList {
@@ -58,3 +57,14 @@
 }
 
 
+.tabLink {
+
+    color: #3d5a73; /* Blue color */
+    text-decoration: none; /* Remove default underline */
+    font-weight: bold; /* Make text bold */
+    margin-right: 10px; /* Add some space between links */
+  
+  
+  
+  
+}

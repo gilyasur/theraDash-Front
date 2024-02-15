@@ -12,6 +12,8 @@ import Appointment from './features/Appointment/Appointment';
 import { MainPreSite } from './features/Presite/MainPreSite';
 import { Dashboard } from './features/Dashboard/Dashboard';
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
+
 
 
 const container = document.getElementById('root')!;

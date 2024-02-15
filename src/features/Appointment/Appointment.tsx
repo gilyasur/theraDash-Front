@@ -75,7 +75,7 @@ const Appointment: React.FC = () => {
       <Table.Th>Patient Name</Table.Th>
       <Table.Th>Date of Appointment</Table.Th>
       <Table.Th>Time of Day</Table.Th>
-      <Table.Th>Notes</Table.Th>
+
       <Table.Th>Action</Table.Th>
     </Table.Tr>
   );
@@ -85,7 +85,7 @@ const Appointment: React.FC = () => {
       <Table.Td style={{ textAlign: 'left' }}>{appointment.patient.first_name} {appointment.patient.last_name}</Table.Td>
       <Table.Td style={{ textAlign: 'left' }}>{appointment.occurrence_date}</Table.Td>
       <Table.Td style={{ textAlign: 'left' }}>{appointment.time_of_day}</Table.Td>
-      <Table.Td style={{ textAlign: 'left' }}>{appointment.notes}</Table.Td>
+
       <Table.Td style={{ textAlign: 'left' }}>
         <button onClick={() => toggleNotes(index)}>
           {showNotesIndex === index ? 'Hide Notes' : 'Show Notes'}
@@ -103,7 +103,7 @@ const Appointment: React.FC = () => {
     <div>
       {logged ? (
         <>
-          <h1>Appointments</h1>
+          <h1>פגישות</h1>
 
           {/* Select dropdown for filtering by patient */}
           <label htmlFor="patientSelect">Filter by Patient:</label>

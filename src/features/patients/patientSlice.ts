@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
-import {  getPatient } from './patientAPI'; // Import the new function
+import {  createPatient, getPatient } from './patientAPI'; // Import the new function
 
 
 export interface Ipatient {
+  id:number;
   therapist: number;
   first_name: string;
   last_name: string;
@@ -12,6 +13,8 @@ export interface Ipatient {
   phone_number: string;
   date_of_birth: string;
   address: string;
+  price:string;
+  day_of_week:string;
 }
 
 export interface IpatientState {
@@ -43,6 +46,22 @@ export const fetchPatients = createAsyncThunk<Ipatient[], string>(
   }
 );
 
+
+
+export const addPatient = createAsyncThunk<Ipatient, { token: string, patientData: Ipatient }>(
+  'patients/addPatient',
+  async ({ token, patientData }) => {
+    try {
+      const response = await createPatient(token, patientData);
+      return response;
+    } catch (error) {
+      console.error('Error in addPatient:', error);
+      throw error;
+    }
+  }
+);
+
+
 const patientSlice = createSlice({
   name: 'patient',
   initialState,
@@ -63,6 +82,16 @@ const patientSlice = createSlice({
       })
       .addCase(fetchPatients.rejected, (state, action) => {
         console.log('fetchPatients.rejected');
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+      .addCase(addPatient.fulfilled, (state, action) => {
+        console.log('addPatient.fulfilled');
+        state.status = 'succeeded';
+        state.patients.push(action.payload); // Add the new patient to the state
+      })
+      .addCase(addPatient.rejected, (state, action) => {
+        console.log('addPatient.rejected');
         state.status = 'failed';
         state.error = action.payload as string;
       });

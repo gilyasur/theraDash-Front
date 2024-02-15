@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@mantine/core": "^7.5.0",
+    "@mantine/dates": "^7.5.2",
     "@mantine/hooks": "^7.5.0",
     "@mantinex/mantine-logo": "^1.0.1",
     "@reduxjs/toolkit": "^1.9.7",
