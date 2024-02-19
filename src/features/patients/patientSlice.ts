@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
-import {  createPatient, getPatient } from './patientAPI'; // Import the new function
+import {  createPatient, getPatient, updatePaitentAPI } from './patientAPI'; // Import the new function
 
 
 export interface Ipatient {
@@ -48,6 +48,7 @@ export const fetchPatients = createAsyncThunk<Ipatient[], string>(
 
 
 
+
 export const addPatient = createAsyncThunk<Ipatient, { token: string, patientData: Ipatient }>(
   'patients/addPatient',
   async ({ token, patientData }) => {
@@ -60,7 +61,18 @@ export const addPatient = createAsyncThunk<Ipatient, { token: string, patientDat
     }
   }
 );
-
+export const updatePatient = createAsyncThunk<Ipatient, { token: string, patientData: Ipatient }>(
+  'patients/updPatient',
+  async ({ token, patientData }) => {
+    try {
+      const response = await updatePaitentAPI(token, patientData);
+      return response;
+    } catch (error) {
+      console.error('Error in update patient:', error);
+      throw error;
+    }
+  }
+);
 
 const patientSlice = createSlice({
   name: 'patient',
@@ -69,11 +81,9 @@ const patientSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchPatients.pending, (state) => {
-        console.log('fetchPatients.pending');
         state.status = 'loading';
       })
       .addCase(fetchPatients.fulfilled, (state, action) => {
-        console.log('fetchPatients.fulfilled');
         state.status = 'succeeded';
         state.patients = action.payload.map((patient) => ({
           ...patient,
@@ -92,6 +102,25 @@ const patientSlice = createSlice({
       })
       .addCase(addPatient.rejected, (state, action) => {
         console.log('addPatient.rejected');
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+      .addCase(updatePatient.fulfilled, (state, action) => {
+        const updatedPatient = action.payload; // Updated patient data received from action payload
+        const existingPatientIndex = state.patients.findIndex(patient => patient.id === updatedPatient.id);
+      
+        if (existingPatientIndex !== -1) {
+          // If the updated patient already exists in the state, replace it with the updated data
+          state.patients[existingPatientIndex] = updatedPatient;
+        } else {
+          // If the updated patient doesn't exist in the state, add it
+          state.patients.push(updatedPatient);
+        }
+        state.status = 'succeeded';
+      })
+      
+      .addCase(updatePatient.rejected, (state, action) => {
+        console.log('updpatient.rejected');
         state.status = 'failed';
         state.error = action.payload as string;
       });

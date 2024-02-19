@@ -53,12 +53,13 @@ export const loginSlice = createSlice({
         state.userfirstName = decodedToken.first_name;
         state.userlastName = decodedToken.last_name;
         state.userEmail = decodedToken.email;
-        console.log(decodedToken.email);
         
         
 
         // Store the token and additional data in localStorage
         localStorage.setItem('token', JSON.stringify(state.token));
+        console.log(state.token);
+        
         localStorage.setItem('firstName', JSON.stringify(state.userfirstName));
         localStorage.setItem('lastName', JSON.stringify(state.userlastName));
         localStorage.setItem('emai', JSON.stringify(state.userEmail));
