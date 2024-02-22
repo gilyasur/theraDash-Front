@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import getAppointments from './appointmentAPI ';
+import { createAppointmentAPI, getAppointments } from './appointmentAPI ';
+
 
 
 
@@ -9,7 +10,7 @@ export interface IAppointment {
   id: number;
   occurrence_date: string;
   time_of_day: string;
-  notes?: string | null;
+  notes: string | null;
   created_at: string;
   updated_at: string;
   therapist: {
@@ -67,7 +68,18 @@ export const fetchAppointments = createAsyncThunk<IAppointment[], string>(
 
 );
 
-
+export const addAppointments = createAsyncThunk<IAppointment, { token: string, appointmentData: IAppointment }>(
+  'appointments/addAppointments',
+  async ({ token, appointmentData }) => {
+    try {
+      const response = await createAppointmentAPI(token, appointmentData);
+      return response;
+    } catch (error) {
+      console.error('Error in addAppointment:', error);
+      throw error;
+    }
+  }
+);
 
 const appointmentsSlice = createSlice({
   name: 'appointments',

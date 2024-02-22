@@ -45,23 +45,7 @@ const createPatient = async (token: any, patientData: any) => {
     throw error; // Re-throw the error to propagate it to the caller
   }
 };
-let tempPatient =  {
-  "id": 7,
-  "first_name": "roni",
-  "last_name": "Doe",
-  "email": "Yoo@gmail.com",
-  "phone_number": "0506948488",
-  "date_of_birth": "2024-02-07",
-  "address": "tel aviv",
-  "created_at": "2024-02-09T19:05:48.194250Z",
-  "updated_at": "2024-02-17T18:16:28.317375Z",
-  "day_of_week": null,
-  "recurring_frequency": "Weekly",
-  "canceled": false,
-  "cancellation_reason": null,
-  "price": null,
-  "therapist": 2
-}
+
 const updatePaitentAPI = async (token: any, patientData: any) => {
   console.log(patientData.id);
   
