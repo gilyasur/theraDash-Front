@@ -8,13 +8,13 @@ import { createAppointmentAPI, getAppointments } from './appointmentAPI ';
 
 export interface IAppointment {
   id: number;
-  occurrence_date: string;
+  occurrence_date: String;
   time_of_day: string;
   notes: string | null;
   created_at: string;
   updated_at: string;
   therapist: {
-    username: string;
+    id: any;
   };
   patient: {
     id: number
@@ -38,6 +38,14 @@ export interface IAppointmentState {
   appointments: IAppointment[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
+}
+interface InewAppointment {
+  id: number;
+  occurrence_date: string
+  patient:string
+  time_of_day:string
+  therapist:string
+  notes:string
 }
 
 const initialState: IAppointmentState = {
@@ -68,7 +76,7 @@ export const fetchAppointments = createAsyncThunk<IAppointment[], string>(
 
 );
 
-export const addAppointments = createAsyncThunk<IAppointment, { token: string, appointmentData: IAppointment }>(
+export const addAppointments = createAsyncThunk<InewAppointment, { token: string, appointmentData: InewAppointment }>(
   'appointments/addAppointments',
   async ({ token, appointmentData }) => {
     try {

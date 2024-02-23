@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
     "@mantine/core": "^7.5.0",
     "@mantine/dates": "^7.5.2",
     "@mantine/hooks": "^7.5.0",
     "@mantinex/mantine-logo": "^1.0.1",
+    "@mui/material": "^5.15.10",
     "@reduxjs/toolkit": "^1.9.7",
     "@tabler/icons-react": "^2.46.0",
     "@testing-library/jest-dom": "^5.17.0",

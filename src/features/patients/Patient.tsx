@@ -38,14 +38,14 @@ export function Patient() {
   const navigate = useNavigate();
   const [newPatientData, setNewPatientData] = useState<Ipatient>({
     id: 0,
-    therapist: 1, 
+    therapist: 2, 
     first_name: "",
     last_name: "",
     email: "",
     phone_number: "",
     date_of_birth: "",
     address: "",
-    price: "",
+    price: "10",
     day_of_week: ""
   });
   const [editPatientData, seteditPatientData] = useState<Ipatient>({
@@ -172,16 +172,14 @@ export function Patient() {
       </Modal>
     </div>
     <Modal opened={showAppointments} onClose={closeAppointments} title="Appointments" centered >
-    {filteredAppointments.map(appointment => (
-        <div key={appointment.id} className={styles.filteredAppointments}>
+  {filteredAppointments.map(appointment => (
+    <div key={appointment.id} className={styles.filteredAppointments}>
+      {appointment.occurrence_date} {/* Format the date */}
+    </div>
+  ))}
+</Modal>
 
-          {appointment.occurrence_date}
 
-         
-          {appointment.time_of_day}
-        </div>
-      ))}
-    </Modal>
     <div className={styles.navBarPatient}>
       <Button onClick={openPatient} color="#2F4858" >Add New Patient</Button>
     </div>

@@ -10,7 +10,8 @@ const getAppointments = async (token:any) => {
 
   try {
     const response = await axios.get(MY_SERVER, config);
-
+    console.log(response.data);
+    
     return response.data;
   } catch (error) {
     console.error("Error in getAppointments:", error);
