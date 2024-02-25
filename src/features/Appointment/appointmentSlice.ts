@@ -1,6 +1,8 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { AnyAction, ThunkDispatch, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { createAppointmentAPI, getAppointments } from './appointmentAPI ';
+import { createAppointmentAPI, getAppointments, updateAppointmentAPI } from './appointmentAPI ';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectToken } from '../Presite/login/loginSlice';
 
 
 
@@ -89,6 +91,19 @@ export const addAppointments = createAsyncThunk<InewAppointment, { token: string
   }
 );
 
+export const updateAppointment = createAsyncThunk<IAppointment, { token: string, appointmentData: IAppointment }>(
+  'patients/updPatient',
+  async ({ token, appointmentData }) => {
+    try {
+      const response = await updateAppointmentAPI(token, appointmentData);
+      return response;
+    } catch (error) {
+      console.error('Error in update patient:', error);
+      throw error;
+    }
+  }
+);
+
 const appointmentsSlice = createSlice({
   name: 'appointments',
   initialState,
@@ -104,6 +119,26 @@ const appointmentsSlice = createSlice({
         state.appointments = action.payload; // Corrected this line
       })
       .addCase(fetchAppointments.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+      .addCase(updateAppointment.fulfilled, (state, action) => {
+        const updatedAppointment = action.payload; // Updated patient data received from action payload
+        const existingAppointmentIndex = state.appointments.findIndex(appointment => appointment.id === action.payload.id);
+      
+        if (existingAppointmentIndex !== -1) {
+          // If the updated patient already exists in the state, replace it with the updated data
+          state.appointments[existingAppointmentIndex] = updatedAppointment;
+        } else {
+          // If the updated patient doesn't exist in the state, add it
+          state.appointments.push(updatedAppointment);
+
+        }
+        state.status = 'succeeded';
+      })
+      
+      .addCase(updateAppointment.rejected, (state, action) => {
+        console.log('updappointment.rejected');
         state.status = 'failed';
         state.error = action.payload as string;
       });

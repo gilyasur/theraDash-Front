@@ -25,6 +25,7 @@ export function Patient() {
   const token = useSelector(selectToken);
   const appointments = useSelector(selectAppointments);
   const filteredAppointments = appointments.filter(appointment => appointment.patient.id === selectedPatientId);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
@@ -35,7 +36,7 @@ export function Patient() {
     }
   }, [dispatch, token]);
 
-  const navigate = useNavigate();
+ 
   const [newPatientData, setNewPatientData] = useState<Ipatient>({
     id: 0,
     therapist: 2, 
@@ -118,7 +119,7 @@ export function Patient() {
   }
 
   if (status === "failed") {
-    return <div>Error: {error}</div>;
+    return <div>Error: Please Login {error}</div>;
   }
 
   return (

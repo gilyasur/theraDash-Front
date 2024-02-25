@@ -21,9 +21,7 @@ const getAppointments = async (token:any) => {
 
 
 const createAppointmentAPI = async (token: any, appointmentData: any) => {
-  console.log('Creating a new appointment...');
-  console.log('appointment Data:', appointmentData); // Log the patient data for debugging
-
+  
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -45,4 +43,46 @@ const createAppointmentAPI = async (token: any, appointmentData: any) => {
   }
 };
 
-export { getAppointments, createAppointmentAPI};
+const updateAppointmentAPI = async (token: any, appointmentData: any) => {
+  let deletedPatientData; // Variable to store deleted patient data
+  // Extract patient ID
+  const patientId = appointmentData.patient.id;
+
+  // Save the patient data before deleting
+  deletedPatientData = appointmentData.patient;
+
+  // Add patient ID to the top level of the JSON object
+  appointmentData.patient = patientId;
+
+  // Delete the patient data
+  delete appointmentData.patient;
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  try {
+    const response = await axios.patch(`${MY_SERVER}${appointmentData.id}/`, appointmentData, config);
+    delete response.data.patient
+    // Push the deleted patient data to the JSON response
+    response.data.patient = deletedPatientData;
+
+    // Return the updated appointment data
+    return response.data;
+  } catch (error) {
+    console.error('Error in updating appointment:', error);
+
+    // Check if the error is an AxiosError and log the response data if available
+    if (axios.isAxiosError(error)) {
+      const responseData = error.response?.data;
+      console.error('Response Data:', responseData);
+    }
+
+    throw error; // Re-throw the error to propagate it to the caller
+  }
+};
+
+
+
+
+export { getAppointments, createAppointmentAPI, updateAppointmentAPI};

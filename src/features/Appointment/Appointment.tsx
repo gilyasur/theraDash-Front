@@ -8,6 +8,7 @@ import {
   selectAppointmentsStatus,
   selectAppointmentsError,
   addAppointments,
+  updateAppointment,
 } from "./appointmentSlice";
 import {
   selectFirstName,
@@ -15,10 +16,20 @@ import {
   selectToken,
 } from "../Presite/login/loginSlice";
 import { IAppointment } from "./appointmentSlice";
-import { Button, Modal, Select, Table, TextInput } from "@mantine/core";
+import {
+  Button,
+  Modal,
+  Select,
+  Table,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { fetchPatients, selectPatients } from "../patients/patientSlice";
 import { TimeInput } from "@mantine/dates";
+import { useNavigate } from "react-router-dom";
+import { IconPencil } from "@tabler/icons-react";
+import { TextField } from "@mui/material";
 
 interface IPatient {
   id: number;
@@ -40,11 +51,13 @@ const Appointment: React.FC = () => {
     { open: openAppointment, close: closeAppointment },
   ] = useDisclosure(false);
   const patients = useSelector(selectPatients);
+  const [editAppointment, { open: openeditAppointment, close: closeeditAppointment }] = useDisclosure(false);
 
   const appointments = useSelector(selectAppointments);
   const status = useSelector(selectAppointmentsStatus);
   const error = useSelector(selectAppointmentsError);
-
+  const navigate = useNavigate();
+  const [value, onChange] = useState(new Date());
   const token = useSelector(selectToken);
   const logged = useSelector(selectLogged);
   const [selectedAppointment, setselectedAppointment] =
@@ -68,7 +81,7 @@ const Appointment: React.FC = () => {
     }
   );
 
-  const [editappointmentData, seteappointmentData] = useState<IAppointment>({
+  const [editappointmentData, seteditappointmentData] = useState<IAppointment>({
     id: selectedAppointment?.id || 0,
     occurrence_date: selectedAppointment?.occurrence_date || "",
     time_of_day: selectedAppointment?.time_of_day || "",
@@ -96,9 +109,13 @@ const Appointment: React.FC = () => {
     },
   });
   useEffect(() => {
-    // Dispatch the fetchAppointments action when the component mounts
-    dispatch(fetchAppointments(token));
-    dispatch(fetchPatients(token));
+    if (token) {
+      // Dispatch the fetchAppointments action when the component mounts
+      dispatch(fetchAppointments(token));
+      dispatch(fetchPatients(token));
+    } else {
+      navigate("/");
+    }
   }, [dispatch, token]);
 
   const handleAddAppointment = () => {
@@ -133,6 +150,41 @@ const Appointment: React.FC = () => {
     setSelectedPatientId(Number(event.target.value));
   };
 
+  const handleOpenEditAppointment = (appointment: IAppointment) => {
+    setselectedAppointment(appointment);
+    seteditappointmentData({ ...appointment }); // Set edit Appointment to the selected appointment's data
+    openeditAppointment();    
+  };
+
+  const handleEditAppointment = () => {
+    if (!selectedAppointment) {
+      // Handle the case where selectedPatient is null, maybe show an error message or return early
+      return;
+    }
+    
+    // Create a copy of the editPatientData and update only the fields that have been changed
+    const updatedAppointmentData = {
+      ...selectAppointments, // Use selectedPatient's data as a base
+      ...editappointmentData 
+    };
+  
+    // Dispatch action to update patient data
+    dispatch(updateAppointment({ token, appointmentData: updatedAppointmentData }));
+
+    // Close the edit modal
+    closeeditAppointment(); 
+
+    
+  };
+
+  function convertToHoursAndMinutes(timeString:any) {
+    // Split the time string into hours and minutes
+    const [hours, minutes] = timeString.split(':').map(Number);
+  
+    // Return formatted time
+    return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+  }
+  
   const patientOptions = patients.map((patient) => ({
     label: `${patient.first_name} ${patient.last_name}`,
     value: String(patient.id),
@@ -181,6 +233,7 @@ const Appointment: React.FC = () => {
       <Table.Th>Date of Appointment</Table.Th>
       <Table.Th>Time of Day</Table.Th>
 
+      <Table.Th>Notes</Table.Th>
       <Table.Th>Action</Table.Th>
     </Table.Tr>
   );
@@ -192,11 +245,13 @@ const Appointment: React.FC = () => {
           {appointment.patient.first_name} {appointment.patient.last_name}
         </Table.Td>
         <Table.Td style={{ textAlign: "left" }}>
-          {appointment.occurrence_date}
-        </Table.Td>
+  {new Date(String(appointment.occurrence_date)).toLocaleDateString('en-GB')}
+</Table.Td>
+
+
         <Table.Td style={{ textAlign: "left" }}>
-          {appointment.time_of_day}
-        </Table.Td>
+  {convertToHoursAndMinutes(appointment.time_of_day)}
+</Table.Td>
 
         <Table.Td style={{ textAlign: "left" }}>
           <button onClick={() => toggleNotes(index)}>
@@ -207,7 +262,61 @@ const Appointment: React.FC = () => {
               <p>Notes: {appointment.notes}</p>
             </div>
           )}
+           
         </Table.Td>
+        <Table.Td>
+          <div style={{borderRadius:"5px"}}>
+        <Button
+  style={{
+    borderRadius: "60px",
+    border: "2px solid",
+    background: '#456A71',
+    color: "white",
+    cursor: 'pointer',
+    marginLeft: '0'
+  }}
+  onClick={() => handleOpenEditAppointment(appointment)}
+  >
+  <IconPencil />
+</Button>
+<Modal opened={editAppointment} onClose={closeeditAppointment} withCloseButton={false}>
+  <div>
+    {/* Check if selectedPatient exists before rendering */}
+    {selectedAppointment && (
+      <>
+        <TimeInput
+  label="time of appointment"
+  placeholder={selectedAppointment.time_of_day}
+  value={editappointmentData.time_of_day}
+  onChange={(e) => seteditappointmentData({ ...editappointmentData, time_of_day: e.target.value })} 
+/>
+
+<input
+  type="date"
+  placeholder={editappointmentData.occurrence_date.toString()} // Convert to primitive string
+  value={editappointmentData.occurrence_date.toString()} // Set value to the occurrence_date in state
+  onChange={(e) =>
+    seteditappointmentData({
+      ...editappointmentData,
+      occurrence_date: e.target.value
+    })
+  }
+/>
+
+<br/>
+
+
+
+
+
+        {/* Add similar TextInput components for other fields */}
+        <Button onClick={handleEditAppointment}>Save Changes</Button>
+      </>
+    )}
+  </div>
+</Modal>
+</div>
+</Table.Td>
       </Table.Tr>
     )
   );
@@ -267,10 +376,13 @@ const Appointment: React.FC = () => {
                     })
                   }
                 />
-                <TextInput
-                  withAsterisk
-                  description="Notes"
+
+                <Textarea
+                  label="Notes"
                   placeholder="Appointment Notes"
+                  autosize
+                  minRows={2}
+                  maxRows={4}
                   value={newappointmentData.notes || ""}
                   onChange={(e) =>
                     setnewappointmentData({

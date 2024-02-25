@@ -15,7 +15,7 @@ export function Login() {
         // Check if the login was successful
         if (logged) {
             // Use navigate to go to the "/App" route
-            navigate('/App');
+            navigate('/App/Dashboard/patients');
         }
     }, [logged, navigate]);
 
