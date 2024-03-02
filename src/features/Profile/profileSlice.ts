@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { getProfile } from './profileAPI';
+import { createProfileAPI, getProfile } from './profileAPI';
 
 export interface IProfile {
   image: string;
@@ -42,7 +42,22 @@ export const fetchProfile = createAsyncThunk<IProfile[], { token: string; userID
   }
 );
 
-
+export const createProfile = createAsyncThunk<IProfile[], { token: string; userID: number }>(
+    'profiles/createProfile',
+    async ({ token, userID }) => {
+      if (!token) {
+        throw new Error('Token not found');
+      }
+  
+      try {
+        const response = await createProfileAPI (token, userID);
+        return response;
+      } catch (error) {
+        console.error('Error in fetchProfile:', error);
+        throw error;
+      }
+    }
+  );
 
 const profileSlice = createSlice({
     name: 'profile',

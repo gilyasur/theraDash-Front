@@ -53,18 +53,32 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
+export const logOut = createAsyncThunk<void, void, { state: RootState }>(
+  'logOut/logOut',
+  async (_, { getState, dispatch }) => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('email');
+    
+    // Dispatch an action to update the logged state to false
+    dispatch(loginSlice.actions.setLogged(false));
+  }
+);
+
+
+
 export const loginSlice = createSlice({
   name: 'login',
   initialState,
-  reducers: {},
+  reducers: {setLogged: (state, action) => {
+    state.logged = action.payload;
+  },},
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.token = action.payload.access;
         const decodedToken: any = jwtDecode(state.token);  
-        console.log(decodedToken);
-        
-        
         state.logged = true;
         state.status = 'loading';
         state.userFirstName = decodedToken.first_name;

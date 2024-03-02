@@ -10,7 +10,7 @@ const getAppointments = async (token:any) => {
 
   try {
     const response = await axios.get(MY_SERVER, config);
-    console.log(response.data);
+
     
     return response.data;
   } catch (error) {
@@ -28,7 +28,7 @@ const createAppointmentAPI = async (token: any, appointmentData: any) => {
 
   try {
     const response = await axios.post(MY_SERVER, appointmentData, config);
-    console.log('Response:', response.data);
+
     return response.data;
   } catch (error) {
     console.error('Error in createAppointment:', error);

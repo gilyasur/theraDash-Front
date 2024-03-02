@@ -11,9 +11,7 @@ const getProfile = async (token: string, userID: number) => {
     };
   
     try {
-      const response = await axios.get(`${MY_SERVER}${userID}`, config); 
-      console.log(response.data);
-      
+      const response = await axios.get(`${MY_SERVER}${userID}`, config);       
       return response.data;
     } catch (error) {
       throw error;
@@ -22,8 +20,20 @@ const getProfile = async (token: string, userID: number) => {
 
   
 
-  
+  const createProfileAPI = async (token: string, userID: number) => {
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
+    try {
+      const response = await axios.post(`${MY_SERVER}create/${userID}/`, config); 
+      console.log(response.data);
+      
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-  export { getProfile};
+  export { getProfile,createProfileAPI};
 
 

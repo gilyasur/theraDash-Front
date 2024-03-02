@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
   Group,
@@ -19,9 +19,11 @@ import classes from './Header.module.css';
 import '@mantine/core/styles.css';
 
 import logoImage from '../../images/DashBoardLogo.jpeg';
-import { selectFirstName, selectLastName, selectLogged, selectProfileImage, selectUserEmail } from '../Presite/login/loginSlice';
+import { logOut, selectFirstName, selectLastName, selectLogged, selectProfileImage, selectUserEmail } from '../Presite/login/loginSlice';
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 
 export function Header() {
+  const dispatch = useDispatch<ThunkDispatch<any, void, AnyAction>>();
   const logged = useSelector(selectLogged);
   const userFirstName = useSelector(selectFirstName);
   const userLastName = useSelector(selectLastName);
@@ -48,6 +50,12 @@ export function Header() {
   const handleProfileClick = () => {
     navigate('/App/profile'); // Navigate to the Profile page
   };
+  const handleLogOut =()=> {
+    dispatch(logOut())
+    navigate('/')
+
+    
+  }
 
   return (
     <div className={classes.header}>
@@ -89,6 +97,7 @@ export function Header() {
                 Edit Profile
               </Menu.Item>
               <Menu.Item
+              onClick={handleLogOut}
                 leftSection={<IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
               >
                 Logout
