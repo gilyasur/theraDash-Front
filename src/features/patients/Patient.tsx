@@ -7,10 +7,16 @@ import { AnyAction } from "redux";
 import { selectFirstName, selectToken } from "../Presite/login/loginSlice";
 import { fetchPatients, selectPatients, selectPatientsError, selectPatientsStatus, addPatient, Ipatient,  updatePatient } from "./patientSlice";
 import styles from "../patients/patient.module.css"
-import { IconAt } from '@tabler/icons-react';
+import { IconAt, IconUserX } from '@tabler/icons-react';
 import { fetchAppointments, selectAppointments } from '../Appointment/appointmentSlice';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { IconPencil } from '@tabler/icons-react';
+import UserXIcon from '../../Icons/userCancel';
+import Box from "@mui/material/Box";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import { IconPencil } from "@tabler/icons-react";
+import { MdCancel } from "react-icons/md";
 
 export function Patient() {
   const [addPatientOpened, { open: openPatient, close: closePatient }] = useDisclosure(false);
@@ -24,7 +30,7 @@ export function Patient() {
   const error = useSelector(selectPatientsError);
   const token = useSelector(selectToken);
   const appointments = useSelector(selectAppointments);
-  const filteredAppointments = appointments.filter(appointment => appointment.patient.id === selectedPatientId);
+  const filteredAppointments = appointments.filter(appointment => appointment.patient && appointment.patient.id === selectedPatientId);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,7 +42,6 @@ export function Patient() {
     }
   }, [dispatch, token]);
 
- 
   const [newPatientData, setNewPatientData] = useState<Ipatient>({
     id: 0,
     therapist: 2, 
@@ -114,6 +119,7 @@ export function Patient() {
   
   
   
+  
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -173,11 +179,12 @@ export function Patient() {
       </Modal>
     </div>
     <Modal opened={showAppointments} onClose={closeAppointments} title="Appointments" centered >
-  {filteredAppointments.map(appointment => (
+  
+{filteredAppointments.map(appointment => (
     <div key={appointment.id} className={styles.filteredAppointments}>
       {appointment.occurrence_date} {/* Format the date */}
     </div>
-  ))}
+))}
 </Modal>
 
 
@@ -203,6 +210,7 @@ export function Patient() {
         />
         {/* Add similar TextInput components for other fields */}
         <Button onClick={handleEditPatient}>Save Changes</Button>
+
       </>
     )}
   </div>
@@ -213,15 +221,18 @@ export function Patient() {
         patients.map((patient, index) => (
           <div key={index} className={styles.patientCard}>
            <div style={{ textAlign: 'left' }}>
-           <Button
+          
+
+    </div>
+    <Button
   style={{ border: 'none', background: '#F5EEE6', color:"#2F4858", cursor: 'pointer', marginLeft: '0' }}
   onClick={() => handleOpenEditPatient(patient)}
 >
   <IconPencil />
+  <UserXIcon/>
 </Button>
-
-    </div>
             <p>
+              
               Patient: {patient.first_name} {patient.last_name}
             </p>
             <p>Email: {patient.email}</p>
@@ -230,7 +241,30 @@ export function Patient() {
             <p>Address: {patient.address}</p>
             <p>Price: {patient.price}</p>
             <p>Day of the week: {patient.day_of_week}</p>
+            <div style={{display:"flex"}}>
             <Button onClick={() => handleOpenAppointments(patient.id)}>Show Appointments</Button>
+            <Box sx={{ height: 65, transform: "translateZ(0px)", flexGrow: 1 }}>
+  <SpeedDial
+    ariaLabel="SpeedDial"
+    sx={{ position: "absolute", bottom: 16, right: 16 }}
+    icon={<SpeedDialIcon />}
+  >
+    {[
+      { icon: <MdCancel style={{ fontSize: '50px' }} />, name: "Cancel", action: () => handleOpenEditPatient(patient) },
+      { icon: <IconPencil />, name: "Edit", action: () => handleOpenEditPatient(patient) }
+    ].map((item, index) => (
+      <SpeedDialAction
+        key={index}
+        icon={item.icon}
+        tooltipTitle={item.name}
+        onClick={item.action}
+      />
+    ))}
+  </SpeedDial>
+</Box>
+
+            </div>
+           
 
             <hr />
           </div>

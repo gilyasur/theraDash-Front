@@ -10,12 +10,13 @@ export function Login() {
     const navigate = useNavigate();
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         // Check if the login was successful
         if (logged) {
             // Use navigate to go to the "/App" route
-            navigate('/App/Dashboard/patients');
+            navigate('/App/Profile');
         }
     }, [logged, navigate]);
 
@@ -29,8 +30,22 @@ export function Login() {
             <div className={styles.row}>
                 <div>
                     UserName:<input onChange={(e) => setUserName(e.target.value)} />
-                    Password:<input onChange={(e) => setPassword(e.target.value)} />
-                    <button
+                    <div>
+  Password:
+  <input
+    type={showPassword ? 'text' : 'password'}
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+  />
+  <label>
+    <input
+      type="checkbox"
+      checked={showPassword}
+      onChange={(e) => setShowPassword(e.target.checked)}
+    />
+    Show password
+  </label>
+</div>                    <button
                         className={styles.button}
                         onClick={handleLogin}>
                         Login

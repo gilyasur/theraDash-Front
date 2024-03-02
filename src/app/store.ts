@@ -5,6 +5,7 @@ import loginReducer from '../features/Presite/login/loginSlice';
 import appointmentReducer from '../features/Appointment/appointmentSlice';
 import patientReducer from '../features/patients/patientSlice';
 import registerReducer from '../features/Presite/register/registerSlice';
+import profileReducer from '../features/Profile/profileSlice';
 
 export const store = configureStore({
   
@@ -13,7 +14,8 @@ export const store = configureStore({
     login: loginReducer,
     appointment: appointmentReducer,
     patient:patientReducer,
-    register:registerReducer
+    register:registerReducer,
+    profile:profileReducer
   },
 });
 

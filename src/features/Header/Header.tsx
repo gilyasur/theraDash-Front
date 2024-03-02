@@ -10,25 +10,28 @@ import {
   Burger,
   rem,
   useMantineTheme,
+  Avatar,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconLogout, IconChevronDown } from '@tabler/icons-react';
+import { IconLogout, IconChevronDown, IconSwitchHorizontal, IconSettings } from '@tabler/icons-react';
 import classes from './Header.module.css';
 
 import '@mantine/core/styles.css';
 
 import logoImage from '../../images/DashBoardLogo.jpeg';
-import { selectFirstName, selectLastName, selectLogged, selectuserEmail } from '../Presite/login/loginSlice';
+import { selectFirstName, selectLastName, selectLogged, selectProfileImage, selectUserEmail } from '../Presite/login/loginSlice';
 
 export function Header() {
   const logged = useSelector(selectLogged);
   const userFirstName = useSelector(selectFirstName);
   const userLastName = useSelector(selectLastName);
-  const userEmail = useSelector(selectuserEmail);
+  const userEmail = useSelector(selectUserEmail);
+  const profile_image= useSelector(selectProfileImage)
   const user = {
     firstName: userFirstName,
     lastName: userLastName,
     email: userEmail,
+    profile_image:profile_image,
   };
   const tabs = ['Patients', 'Appointments', 'Payments', 'Calendar', 'Reports'];
   const theme = useMantineTheme();
@@ -42,11 +45,15 @@ export function Header() {
     navigate(`/App/Dashboard/${value.toLowerCase()}`);
   };
 
+  const handleProfileClick = () => {
+    navigate('/App/profile'); // Navigate to the Profile page
+  };
+
   return (
     <div className={classes.header}>
       <Container className={classes.mainSection} size="md">
         <Group justify="space-between">
-          <img src={logoImage} alt="Custom Logo" style={{ height: '90px' }} />
+          <img src={logoImage} alt="Logo" style={{ height: '90px' }} />
           Psychologist DashBoard App
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Menu
@@ -59,6 +66,9 @@ export function Header() {
           >
             <Menu.Target>
               <div className={classes.user} style={{border:"10px"}}>
+              <img src={`http://127.0.0.1:8000${user.profile_image}`} alt="Profile"  style={{ width: '80px', height: 'auto' }} // Adjust the width as needed
+/>
+
                 <Group gap={7}>
                   <Text fw={500} size="sm" lh={1} mr={3}>
                     {user.firstName} {user.lastName}
@@ -68,11 +78,22 @@ export function Header() {
               </div>
             </Menu.Target>
             <Menu.Dropdown>
+            <Menu.Item
+            onClick={handleProfileClick}
+               leftSection={
+                <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              }
+              >
+
+
+                Edit Profile
+              </Menu.Item>
               <Menu.Item
                 leftSection={<IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
               >
                 Logout
               </Menu.Item>
+
               <Menu.Divider />
             </Menu.Dropdown>
           </Menu>

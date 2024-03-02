@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../../app/store';
 
-import { register } from './registerAPI';
+import { registerAPI } from './registerAPI';
 
 import { jwtDecode } from "jwt-decode";
 
@@ -34,9 +34,9 @@ const initialState: registerState = {
 
 
 export const registerAsync = createAsyncThunk(
-  'login/login',
-  async (credentials: { username: string; password: string }) => {
-    const response = await register(credentials);
+  'Register/postregister',
+  async (credentials: { username: string; password: string,first_name:string,last_name:string,email:string  }) => {
+    const response = await registerAPI(credentials);
     return response.data;
   }
 );
@@ -46,16 +46,15 @@ export const registerSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    
-      
+    builder
+      .addCase(registerAsync.fulfilled, (state, action) => {
+        console.log(action.payload);
+        
+        
+      })  
   },
 });
 
-export const selectstatus = (state: RootState) => state.login.status;
-export const selectLogged = (state: RootState) => state.login.logged;
-export const selectToken = (state: RootState) => state.login.token;
-export const selectFirstName = (state: RootState) => state.login.userfirstName;
-export const selectLastName = (state: RootState) => state.login.userlastName;
-export const selectuserEmail = (state: RootState) => state.login.userEmail;
+
 
 export default registerSlice.reducer;

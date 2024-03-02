@@ -11,10 +11,11 @@ import { Patient } from './features/patients/Patient';
 import Appointment from './features/Appointment/Appointment';
 import { MainPreSite } from './features/Presite/MainPreSite';
 import { Dashboard } from './features/Dashboard/Dashboard';
+import { Profile } from './features/Profile/Profile'; // Import the Profile component
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
-
-
+import { Register } from './features/Presite/register/Register';
+import { EditProfile } from './features/Profile/EditProfile';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -22,24 +23,25 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-    <MantineProvider>
+      <MantineProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<MainPreSite />} />
+            
             <Route path="/App/*" element={<App />}>
-              {/* Use an index route to render Dashboard */}
-
-              {/* Use a nested route for each tab */}
               <Route path="Dashboard">
                 <Route index element={<Outlet />} />
                 <Route path="patients" element={<Patient />} />
                 <Route path="appointments" element={<Appointment />} />
                 {/* Add more routes as needed for other tabs */}
               </Route>
-              {/* Redirect /App to /App/Dashboard by default */}
+              <Route path="profile" element={<Profile />} /> 
+              <Route path="editProfile" element={<EditProfile />} /> 
+             
               <Route index element={<Navigate to="Dashboard" />} />
             </Route>
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
+            <Route path="register" element={<Register />} /> 
           </Routes>
         </BrowserRouter>
       </MantineProvider>
