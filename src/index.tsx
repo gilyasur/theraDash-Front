@@ -16,6 +16,7 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css';
 import { Register } from './features/Presite/register/Register';
 import { EditProfile } from './features/Profile/EditProfile';
+import ResetPass from './features/Presite/forgotPass/ResetPass';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -33,15 +34,14 @@ root.render(
                 <Route index element={<Outlet />} />
                 <Route path="patients" element={<Patient />} />
                 <Route path="appointments" element={<Appointment />} />
-                {/* Add more routes as needed for other tabs */}
               </Route>
               <Route path="profile" element={<Profile />} /> 
               <Route path="editProfile" element={<EditProfile />} /> 
-             
               <Route index element={<Navigate to="Dashboard" />} />
             </Route>
             <Route path="*" element={<p>There's nothing here: 404!</p>} />
             <Route path="register" element={<Register />} /> 
+            <Route path="reset-password/:userName/:userID" element={<ResetPass />} />
           </Routes>
         </BrowserRouter>
       </MantineProvider>

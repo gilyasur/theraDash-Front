@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { useNavigate } from 'react-router-dom';
 import styles from "../login/Login.module.css"
-import { selectLogged, loginAsync } from './loginSlice';
+import { selectLogged, loginAsync, forgotPass } from './loginSlice';
+import { Button, Modal,TextInput } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 
 export function Login() {
     const logged = useAppSelector(selectLogged);
@@ -24,7 +26,7 @@ export function Login() {
         // Dispatch the login action
         await dispatch(loginAsync({ username, password }));
     };
-
+    
     return (
         <div>
             <div className={styles.row}>
@@ -51,7 +53,11 @@ export function Login() {
                         Login
                     </button>
                 </div>
+                
             </div>
+            
+           
+           
         </div>
     );
 }

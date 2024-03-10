@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../../app/store';
-import { login } from './loginAPI';
+import { forgotPassAPI, login, resetPassAPI } from './loginAPI';
 import axios from 'axios'
 import { jwtDecode } from "jwt-decode";
 import { createSelector } from '@reduxjs/toolkit';
@@ -66,7 +66,21 @@ export const logOut = createAsyncThunk<void, void, { state: RootState }>(
   }
 );
 
+export const forgotPass = createAsyncThunk(
+  'forgotPass/forgotPass',
+  async (credentials: { username: string }) => {
+    const response = await forgotPassAPI(credentials);
+    return response.data; // No need for type assertion since response.data should match LoginResponse
+  }
+);
 
+export const resetPass = createAsyncThunk(
+  'resetPass/resetPass',
+  async (credentials: { id:number, new_password: string,username:string }) => {
+    const response = await resetPassAPI(credentials);
+    return response.data; // No need for type assertion since response.data should match LoginResponse
+  }
+);
 
 export const loginSlice = createSlice({
   name: 'login',

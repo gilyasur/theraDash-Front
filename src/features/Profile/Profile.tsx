@@ -44,14 +44,7 @@ export function Profile() {
        
       <h2>Profile</h2>
       <div>
-      {profileState.profile && profileState.profile.length > 0 ? (
-  <div>
-    <p>User ID: {profileState.profile[0].user_id}</p>
-    <p>Title: {profileState.profile[0].title}</p>
-  </div>
-) : (
-  <div>No profile data available</div>
-)}
+     
 
 
 
@@ -67,8 +60,7 @@ export function Profile() {
             />
           ) : (
             <div>
-              <input type='file' />
-              <label>Image</label>
+             
             </div>
           )}
         </div>
