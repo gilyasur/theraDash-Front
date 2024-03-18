@@ -1,35 +1,82 @@
-
 .patientCards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    
-    
-  }
-  
-  .patientCard {
-    background-color: #F5EEE6;
-    border: 1px solid #e1e1e1;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    box-shadow: 10px 5px 5px lightgray;
-    color: black;
-    -webkit-text-stroke: 0.3px white;
-    font-size: larger;
-  }
-  
-  .patient-card p {
-    margin: 8px 0;
-    
-  }
-
-
-.filteredAppointments {
   display: flex;
-  justify-content: center;
-  justify-content: space-between;
-
-  
+  flex-wrap: wrap;
+  gap: 20px;
 }
+
+.patientCard {
+  background-color: #F5EEE6;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 15px;
+  flex: 1 0 calc(33.33% - 20px); /* Adjust the width as per your layout */
+  max-width: calc(33.33% - 20px); /* Ensure cards don't grow too wide */
+  box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+.patientName {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.patientDetail {
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.buttonsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  flex-wrap: wrap; /* Allow buttons to wrap to a new line on smaller screens */
+}
+
+.editButton {
+  border: none;
+  background: #F5EEE6;
+  color: #2F4858;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.speedDialContainer {
+  position: relative;
+  flex-shrink: 0; /* Prevent shrinking */
+  margin-top: 10px;
+  z-index: 1; /* Ensure SpeedDial appears above other content */
+}
+
+.showAppointmentsButton {
+  width: calc(50% - 5px); /* Adjust the width as per your layout */
+  margin-top: 10px;
+  z-index: 0; /* Ensure Show Appointments button appears below other content */
+}
+
+@media screen and (max-width: 768px) {
+  .patientCard {
+    flex: 1 0 calc(100% - 20px); /* Show one card per row on smaller screens */
+    max-width: calc(100% - 20px);
+  }
+
+
+  .speedDialContainer {
+    position: relative;
+    flex-shrink: 0; /* Prevent shrinking */
+    margin-top: 60px;
+    z-index: 1; /* Ensure SpeedDial appears above other content */
+  }
+  .showAppointmentsButton {
+    width: calc(50% - 5px); /* Adjust the width as per your layout */
+    margin-top: 10px;
+    z-index: 0; /* Ensure Show Appointments button appears below other content */
+    flex: 1 0 calc(50% - 5px); /* Shrink button width on smaller screens */
+  }
+}
+

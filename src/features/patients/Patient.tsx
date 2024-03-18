@@ -1,11 +1,11 @@
 import { useDisclosure } from '@mantine/hooks';
-import { Modal, Button, rem, TextInput, Input } from '@mantine/core';
+import { Modal, Button, rem, TextInput, Input, NumberInput, Table } from '@mantine/core';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
 import { selectFirstName, selectToken } from "../Presite/login/loginSlice";
-import { fetchPatients, selectPatients, selectPatientsError, selectPatientsStatus, addPatient, Ipatient,  updatePatient } from "./patientSlice";
+import { fetchPatients, selectPatients, selectPatientsError, selectPatientsStatus, addPatient, Ipatient,  updatePatient, cancelPatientAsync } from "./patientSlice";
 import styles from "../patients/patient.module.css"
 import { IconAt, IconUserX } from '@tabler/icons-react';
 import { fetchAppointments, selectAppointments } from '../Appointment/appointmentSlice';
@@ -17,6 +17,8 @@ import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
 import { IconPencil } from "@tabler/icons-react";
 import { MdCancel } from "react-icons/md";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export function Patient() {
   const [addPatientOpened, { open: openPatient, close: closePatient }] = useDisclosure(false);
@@ -32,6 +34,8 @@ export function Patient() {
   const appointments = useSelector(selectAppointments);
   const filteredAppointments = appointments.filter(appointment => appointment.patient && appointment.patient.id === selectedPatientId);
   const navigate = useNavigate();
+  const notifyaddPatient = () => toast("Patient Added!");
+  const [errorInput, seterrorInput] = useState('');
 
   useEffect(() => {
     if (token) {
@@ -52,7 +56,9 @@ export function Patient() {
     date_of_birth: "",
     address: "",
     price: "10",
-    day_of_week: ""
+    day_of_week: "",
+    canceled:false,  
+
   });
   const [editPatientData, seteditPatientData] = useState<Ipatient>({
     id: selectedPatient?.id || 0,
@@ -64,7 +70,8 @@ export function Patient() {
     date_of_birth: selectedPatient?.date_of_birth || "",
     address: selectedPatient?.address || "",
     price: selectedPatient?.price || "",
-    day_of_week: selectedPatient?.day_of_week || ""
+    day_of_week: selectedPatient?.day_of_week || "",
+    canceled:selectedPatient?.canceled|| false,
   });
 
  
@@ -72,6 +79,11 @@ export function Patient() {
   const icon = <IconAt style={{ width: rem(16), height: rem(16) }} />;
 
   const handleAddPatient = () => {
+    if (!newPatientData.first_name || !newPatientData.last_name || !newPatientData.date_of_birth || !newPatientData.email) {
+      seterrorInput('Please fill out all required fields.');
+      return;
+    }
+  
     dispatch(addPatient({ token, patientData: newPatientData }));
     setNewPatientData({
       id: 0,
@@ -84,9 +96,12 @@ export function Patient() {
       address: "",
       price: "",
       day_of_week: "",
+      canceled: false,
     });
     closePatient(); 
+    notifyaddPatient();
   };
+  
 
   const handleOpenAppointments = (id: number) => {
     setSelectedPatientId(id);
@@ -118,82 +133,130 @@ export function Patient() {
   };
   
   
+  const handleCancelPatient = (patientId: any) => {
+    // Show confirmation dialog
+    const confirmed = window.confirm('Are you sure you want to cancel this patient?');
   
+    // If user confirmed, proceed with cancellation
+    if (confirmed) {
+      const cancelData = {
+        canceled: true
+      };
+  
+      dispatch(cancelPatientAsync({ token, patientData: cancelData, patientId: patientId }));
+    }
+  }
+  
+  function convertToHoursAndMinutes(timeString:any) {
+    // Split the time string into hours and minutes
+    const [hours, minutes] = timeString.split(':').map(Number);
+  
+    // Return formatted time
+    return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+  }
+  
+
   
   if (status === "loading") {
     return <div>Loading...</div>;
   }
 
   if (status === "failed") {
-    return <div>Error: Please Login {error}</div>;
+    return  <div>
+    Error: Please Login :{error}
+    <a href="/" rel="noopener noreferrer">
+      Click here to login
+    </a>
+  </div>;
   }
 
   return (
     <>
     <div>
-      <Modal opened={addPatientOpened} onClose={closePatient} title="Add New Patient" centered>
-      
-        <div>
-        <TextInput
+    <h1 style={{ textAlign: "center" }}>Patients</h1>
+    <Modal opened={addPatientOpened} onClose={closePatient} title="Add New Patient" centered>
+      <div>
+      <TextInput
           withAsterisk
-          description="First Name"
+          description={<span>First Name - <strong style={{color:"red"}}>Required</strong></span>}
           placeholder="Patient First Name"
           value={newPatientData.first_name}
           onChange={(e) => setNewPatientData({ ...newPatientData, first_name: e.target.value })}
         />
         <TextInput
           withAsterisk
-          description="Last Name"
+          description={<span>Last Name - <strong style={{color:"red"}}>Required</strong></span>}
           placeholder="Patient Last Name"
           value={newPatientData.last_name}
           onChange={(e) => setNewPatientData({ ...newPatientData, last_name: e.target.value })}
         />
+     <span style={{color:"#868e96", fontSize:"0.8rem"}}>Patient DOB : <strong style={{color:"red"}}>Required</strong> </span>
+        <br/>
+        <input type="date"  placeholder="Date of Birth" value={newPatientData.date_of_birth} onChange={(e) => setNewPatientData({ ...newPatientData, date_of_birth: e.target.value })} />
         <TextInput
           withAsterisk
-          description="Address"
-          placeholder="Patient Address"
-          value={newPatientData.address}
-          onChange={(e) => setNewPatientData({ ...newPatientData, address: e.target.value })}
-        />
-        <TextInput
-          leftSectionPointerEvents="none"
-          leftSection={icon}
-          label="Email"
+          description={<span>Email - <strong style={{color:"red"}}>Required</strong></span>}
           placeholder="Email"
           value={newPatientData.email}
           onChange={(e) => setNewPatientData({ ...newPatientData, email: e.target.value })} 
         />
         <TextInput
-          withAsterisk
-          description="Telephone Number"
-          placeholder="Patient Number"
-          value={newPatientData.phone_number}
-          onChange={(e) => setNewPatientData({ ...newPatientData, phone_number: e.target.value })}
-        />
-        <span style={{color:"#868e96", fontSize:"0.8rem"}}>Patient DOB : </span>
-        <br/>
-        <input type="date" placeholder="Date of Birth" value={newPatientData.date_of_birth} onChange={(e) => setNewPatientData({ ...newPatientData, date_of_birth: e.target.value })} />
-        <br></br>
-        <button onClick={handleAddPatient} style={{paddingTop:"2px"}}>Add Patient</button>
-        </div>
-      </Modal>
+  withAsterisk
+  description="Telephone Number"
+  placeholder="Patient Number"
+  value={newPatientData.phone_number}
+  onChange={(e) => setNewPatientData({ ...newPatientData, phone_number: e.target.value })}
+/>
+
+<TextInput
+  withAsterisk
+  description="Address"
+  placeholder="Patient Address"
+  value={newPatientData.address}
+  onChange={(e) => setNewPatientData({ ...newPatientData, address: e.target.value })}
+/>
+<NumberInput
+  label="Price"
+  placeholder=""
+  allowDecimal={false}
+  value={newPatientData.price}
+  onChange={(val) => {
+    const numericValue = typeof val === 'string' ? parseFloat(val) : val;
+    setNewPatientData({ ...newPatientData, price: numericValue.toString() || '0' });
+  }}
+/>
+
+        {/* Same for other fields */}
+        <button onClick={handleAddPatient} style={{ paddingTop: "2px" }}>Add Patient</button>
+        {errorInput && <div style={{ color: 'red' }}>{errorInput}</div>}
+      </div>
+    </Modal>
     </div>
     <Modal opened={showAppointments} onClose={closeAppointments} title="Appointments" centered >
-  
-{filteredAppointments.map(appointment => (
-    <div key={appointment.id} className={styles.filteredAppointments}>
-      {appointment.occurrence_date} {/* Format the date */}
-    </div>
-))}
+  <Table>
+    <Table.Thead>
+      <Table.Tr>
+        <Table.Th>Date</Table.Th>
+        <Table.Th>Time</Table.Th>
+      </Table.Tr>
+    </Table.Thead>
+    <Table.Tbody>
+      {filteredAppointments.map(appointment => (
+        <Table.Tr key={appointment.id}>
+          <Table.Td> {new Date(String(appointment.occurrence_date)).toLocaleDateString('en-GB')}</Table.Td>
+          <Table.Td> {convertToHoursAndMinutes(appointment.time_of_day)}</Table.Td>
+        </Table.Tr>
+      ))}
+    </Table.Tbody>
+  </Table>
 </Modal>
 
 
-    <div className={styles.navBarPatient}>
-      <Button onClick={openPatient} color="#2F4858" >Add New Patient</Button>
+    <div className={styles.navBarPatient} style={{display:"flex"}}>
+      <Button onClick={openPatient} style={{"marginBottom":"10px", marginLeft:"10px"}} color="#2F4858" >Add New Patient</Button>
     </div>
     <Modal opened={editPatient} onClose={closeeditPatient} withCloseButton={false}>
   <div>
-    {/* Check if selectedPatient exists before rendering */}
     {selectedPatient && (
       <>
         <TextInput
@@ -208,7 +271,6 @@ export function Patient() {
           value={editPatientData.last_name}
           onChange={(e) => seteditPatientData({ ...editPatientData, last_name: e.target.value })} 
         />
-        {/* Add similar TextInput components for other fields */}
         <Button onClick={handleEditPatient}>Save Changes</Button>
 
       </>
@@ -216,63 +278,66 @@ export function Patient() {
   </div>
 </Modal>
 
-    <div className={styles.patientCards}>
-      {patients && patients.length > 0 ? (
-        patients.map((patient, index) => (
-          <div key={index} className={styles.patientCard}>
-           <div style={{ textAlign: 'left' }}>
-          
-
-    </div>
-    <Button
-  style={{ border: 'none', background: '#F5EEE6', color:"#2F4858", cursor: 'pointer', marginLeft: '0' }}
-  onClick={() => handleOpenEditPatient(patient)}
->
-  <IconPencil />
-  <UserXIcon/>
-</Button>
-            <p>
-              
+<div className={styles.patientCards}>
+  {patients && patients.length > 0 ? (
+    patients
+      .filter((patient) => patient.canceled === false) // Filter out canceled patients
+      .map((patient, index) => (
+        <div key={index} className={styles.patientCard}>
+          <div className={styles.patientInfo}>
+            <p className={styles.patientName}>
               Patient: {patient.first_name} {patient.last_name}
             </p>
-            <p>Email: {patient.email}</p>
-            <p>Phone Number: {patient.phone_number}</p>
-            <p>Date of Birth: {patient.date_of_birth}</p>
-            <p>Address: {patient.address}</p>
-            <p>Price: {patient.price}</p>
-            <p>Day of the week: {patient.day_of_week}</p>
-            <div style={{display:"flex"}}>
-            <Button onClick={() => handleOpenAppointments(patient.id)}>Show Appointments</Button>
-            <Box sx={{ height: 65, transform: "translateZ(0px)", flexGrow: 1 }}>
-  <SpeedDial
-    ariaLabel="SpeedDial"
-    sx={{ position: "absolute", bottom: 16, right: 16 }}
-    icon={<SpeedDialIcon />}
-  >
-    {[
-      { icon: <MdCancel style={{ fontSize: '50px' }} />, name: "Cancel", action: () => handleOpenEditPatient(patient) },
-      { icon: <IconPencil />, name: "Edit", action: () => handleOpenEditPatient(patient) }
-    ].map((item, index) => (
-      <SpeedDialAction
-        key={index}
-        icon={item.icon}
-        tooltipTitle={item.name}
-        onClick={item.action}
-      />
-    ))}
-  </SpeedDial>
-</Box>
-
-            </div>
-           
-
-            <hr />
+            <p className={styles.patientDetail}>
+              <span className={styles.label}>Email:</span> {patient.email}
+            </p>
+            <p className={styles.patientDetail}>
+              <span className={styles.label}>Phone Number:</span> {patient.phone_number}
+            </p>
+            <p className={styles.patientDetail}>
+              <span className={styles.label}>Date of Birth:</span> {patient.date_of_birth}
+            </p>
+            <p className={styles.patientDetail}>
+              <span className={styles.label}>Address:</span> {patient.address}
+            </p>
+            <p className={styles.patientDetail}>
+              <span className={styles.label}>Price:</span> {patient.price}
+            </p>
+          
           </div>
-        ))
-      ) : (
-        <div>No appointments available</div>
-      )}
-    </div>
+          <div style={{display:"flex", justifyContent:"space-between"}} className={styles.actionsContainer}>
+            <div className={styles.showAppointmentsButton} >
+              <Button style={{width:"12rem"}} onClick={() => handleOpenAppointments(patient.id)} >Show Appointments</Button>
+            </div>
+            <div className={styles.speedDialContainer}>
+              <Box sx={{ height: 50, transform: "translateZ(0px)", flexGrow: 1 }}>
+                <SpeedDial
+                  ariaLabel="SpeedDial"
+                  sx={{ position: "absolute", bottom: 1, right: 16 }}
+                  icon={<SpeedDialIcon />}
+                >
+                  {[
+                    { icon: <MdCancel style={{ fontSize: '50px' }} />, name: "Cancel", action: () => handleCancelPatient(patient.id) },
+                    { icon: <IconPencil />, name: "Edit", action: () => handleOpenEditPatient(patient) }
+                  ].map((item, index) => (
+                    <SpeedDialAction
+                      key={index}
+                      icon={item.icon}
+                      tooltipTitle={item.name}
+                      onClick={item.action}
+                    />
+                  ))}
+                </SpeedDial>
+              </Box>
+            </div>
+          </div>
+          <hr />
+        </div>
+      ))
+  ) : (
+    <div>No appointments available</div>
+  )}
+</div>
     </>
   );
 }

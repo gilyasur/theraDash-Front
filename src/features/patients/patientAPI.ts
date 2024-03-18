@@ -72,4 +72,33 @@ const updatePaitentAPI = async (token: any, patientData: any) => {
   }
 };
 
-export { getPatient, createPatient, updatePaitentAPI };
+
+const cancelPatientAPI = async (token: any, patientData: any,patientId: number,) => {
+  console.log(patientData)
+  console.log(patientId);
+  
+  
+  console.log('Patient Data:', patientData); // Log the patient data for debugging
+
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+
+  try {
+    const response = await axios.patch(`${MY_SERVER}${patientId}/cancel/`, patientData, config);
+    console.log('Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in Update patient:', error);
+
+    // Check if the error is an AxiosError and log the response data if available
+    if (axios.isAxiosError(error)) {
+      const responseData = error.response?.data;
+      console.error('Response Data:', responseData);
+    }
+
+    throw error; // Re-throw the error to propagate it to the caller
+  }
+};
+
+export { getPatient, createPatient, updatePaitentAPI,cancelPatientAPI };

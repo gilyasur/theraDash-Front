@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { Drawer } from '@mantine/core';
 import {
   Container,
   Group,
@@ -21,6 +22,8 @@ import '@mantine/core/styles.css';
 import logoImage from '../../images/DashBoardLogo.jpeg';
 import { logOut, selectFirstName, selectLastName, selectLogged, selectProfileImage, selectUserEmail } from '../Presite/login/loginSlice';
 import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { selectEditedImageProfile } from '../Profile/profileSlice';
+import { useAppSelector } from '../../app/hooks';
 
 export function Header() {
   const dispatch = useDispatch<ThunkDispatch<any, void, AnyAction>>();
@@ -35,13 +38,13 @@ export function Header() {
     email: userEmail,
     profile_image:profile_image,
   };
-  const tabs = ['Patients', 'Appointments', 'Payments', 'Calendar', 'Reports'];
+  const tabs = ['Profile', 'Patients', 'Appointments',  'Reports',];
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-
+  const [drawerOpened, setDrawerOpened] = useState(false);
   const navigate = useNavigate();
-
+  const editedProfileImage: string | null = useSelector(selectEditedImageProfile)?.editedprofileImage ?? null;
   const handleTabChange = (value:any) => {
     // Use react-router's useNavigate to update the route based on the selected tab
     navigate(`/App/Dashboard/${value.toLowerCase()}`);
@@ -50,6 +53,9 @@ export function Header() {
   const handleProfileClick = () => {
     navigate('/App/profile'); // Navigate to the Profile page
   };
+  const handleeditProfileClick = () => {
+    navigate('/App/editProfile'); // Navigate to the Profile page
+  };
   const handleLogOut =()=> {
     dispatch(logOut())
     navigate('/')
@@ -57,14 +63,56 @@ export function Header() {
     
   }
 
+  const [updatedProfileImage, setUpdatedProfileImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Update the profile image whenever editedProfileImage changes
+    setUpdatedProfileImage(editedProfileImage);
+    console.log(updatedProfileImage);
+    
+  }, [editedProfileImage]);
+ 
+  
+
   return (
     <div className={classes.header}>
-      <Container className={classes.mainSection} size="md">
-        <Group justify="space-between">
-          <img src={logoImage} alt="Logo" style={{ height: '90px' }} />
-          Psychologist DashBoard App
-          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-          <Menu
+      <Container className={classes.mainSection} size="md" >
+        <Group gap="xs" justify="space-between">
+          <div>
+          <img src={logoImage} alt="Logo" style={{ height: '90px', borderRadius: '50%', border: '1px solid #94b6bf' }} />
+       
+          </div>
+          <div className={classes.dmSansCustom}>Therapist DashBoard App</div>
+         
+          <Burger
+  opened={drawerOpened}
+  onClick={() => setDrawerOpened((o) => !o)}
+  hiddenFrom="sm"
+  size="sm"
+/>  
+<Drawer
+  opened={drawerOpened}
+  onClose={() => setDrawerOpened(false)}
+  position="left"
+  withCloseButton={false}
+  size="xs"
+>
+<Tabs
+  defaultValue="Profile"
+  variant="outline"
+  orientation="vertical"
+  onChange={handleTabChange} // Use onChange instead of onTabChange
+>
+    <Tabs.List>
+      {tabs.map((tab) => (
+        <Tabs.Tab key={tab} value={tab}>
+          {tab}
+        </Tabs.Tab>
+      ))}
+    </Tabs.List>
+  </Tabs>
+</Drawer>
+        <Menu
             width={260}
             position="bottom-end"
             transitionProps={{ transition: 'pop-top-right' }}
@@ -74,15 +122,26 @@ export function Header() {
           >
             <Menu.Target>
               <div className={classes.user} style={{border:"10px"}}>
-              <img src={`http://127.0.0.1:8000${user.profile_image}`} alt="Profile"  style={{ width: '80px', height: 'auto' }} // Adjust the width as needed
-/>
+              <img
+        src={updatedProfileImage ? `http://127.0.0.1:8000${updatedProfileImage}` : `http://127.0.0.1:8000${profile_image}`}
+        alt="Profile"
+        style={{
+          width: '50px',
+          height: 'auto',
+          borderRadius: '50%',
+          border: '0.5px solid #94b6bf',
+        }}
+      />
 
-                <Group gap={7}>
+                <Group justify="space-between">
                   <Text fw={500} size="sm" lh={1} mr={3}>
                     {user.firstName} {user.lastName}
                   </Text>
+                  
                   <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
                 </Group>
+                <br/>
+
               </div>
             </Menu.Target>
             <Menu.Dropdown>
@@ -94,7 +153,17 @@ export function Header() {
               >
 
 
-                Edit Profile
+                Profile
+              </Menu.Item>
+              <Menu.Item
+            onClick={handleeditProfileClick}
+               leftSection={
+                <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+              }
+              >
+
+
+               Edit Profile
               </Menu.Item>
               <Menu.Item
               onClick={handleLogOut}
@@ -110,7 +179,7 @@ export function Header() {
       </Container>
       <Container size="md">
         <Tabs
-          defaultValue="Patients"
+          defaultValue="Profile"
           variant="outline"
           visibleFrom="sm"
           classNames={{

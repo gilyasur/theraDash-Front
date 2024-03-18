@@ -21,7 +21,7 @@ const ForgotPass = () => {
 
     return (
         <div>
-            <Button onClick={openForgotPassword} color="#2F4858">
+            <Button onClick={openForgotPassword} color="#2F4858" size="xs" radius="xl" variant="light">
                 Forgot Your Password?
             </Button>
             <Modal opened={forgotPassword} onClose={closeForgotPassword} withCloseButton={false}>

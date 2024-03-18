@@ -116,7 +116,7 @@ const appointmentsSlice = createSlice({
       .addCase(fetchAppointments.fulfilled, (state, action) => {
 
         state.status = 'succeeded';
-        state.appointments = action.payload; // Corrected this line
+        state.appointments = action.payload; 
       })
       .addCase(fetchAppointments.rejected, (state, action) => {
         state.status = 'failed';

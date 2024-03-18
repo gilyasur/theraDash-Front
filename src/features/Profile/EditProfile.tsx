@@ -2,46 +2,56 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectProfileImage, selectToken, selectUserID } from "../Presite/login/loginSlice";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
-
-
+import { editProfileAsync, fetchProfile, selectProfile } from "./profileSlice";
+import { AppDispatch } from "../../app/store";
 
 export function EditProfile() {
-    const token = useSelector(selectToken);
-    const dispatch = useDispatch<ThunkDispatch<any, void, AnyAction>>();
-    const navigate = useNavigate();
-    const userID = useSelector(selectUserID)
-    const [image, setImage] = useState<File | null>(null);
-    const profileImage = useSelector(selectProfileImage);
-    
-    useEffect(() => {
+  const token = useSelector(selectToken);
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const userID = useSelector(selectUserID)
+  const [image, setImage] = useState<File | null>(null);
+  const [address, setAddress] = useState<string>('');
+  const [dob, setDob] = useState<string>(''); // Assuming dob is a string
   
-      
-      if (token) {
-        const userIdNumber = Number(userID); // Ensure userID is a primitive number
-      //   dispatch(fetchProfile({ token, userID: userIdNumber })); // Pass token and userID as an object
-        
-      } else {
-        navigate('/');
-      }
-    }, [dispatch, token, userID, navigate]);
-    
-    
+  const profileImage = useSelector(selectProfileImage);
+  const profile = useSelector(selectProfile);
   
-    
+  useEffect(() => {
+    if (!token) {
+      navigate('/');
+    }
+  }, [token, navigate]);
   
-    
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      setImage(files[0]);
+    }
+  };
   
-    return (
+  
+  const editProfile = async () => {
+    const formData = new FormData();
+    formData.append('profile_image', image as File);
+    formData.append('address', address);
+    formData.append('dob', dob);
+    
+    dispatch(editProfileAsync({ token, formData })); // Pass an object with token and formData
+    if (userID) { // Check if userID is defined
+      dispatch(fetchProfile({ token, userID: Number(userID) })); // Convert userID to number
+    }
+  };
+  
+  return (
+    <div>
+      <h2> Edit Your Profile</h2>
       <div>
-        <h2>Profile</h2>
-        <div>
-  
-        <img src={`http://127.0.0.1:8000${profileImage}`} alt="Profile"  style={{ width: '80px', height: 'auto' }}/>
-  
-        </div>
-        
+        <input type="file" onChange={handleImageChange} accept="image/*" />
+        <input type="text" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+        <input type="date" placeholder="Date of Birth" value={dob} onChange={(e) => setDob(e.target.value)} />
+        <button onClick={editProfile}>Save</button>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

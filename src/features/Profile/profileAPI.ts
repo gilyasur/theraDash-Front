@@ -20,7 +20,7 @@ const getProfile = async (token: string, userID: number) => {
 
   
 
-  const createProfileAPI = async (token: string, userID: number) => {
+const createProfileAPI = async (token: string, userID: number) => {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
@@ -34,6 +34,26 @@ const getProfile = async (token: string, userID: number) => {
     }
   };
 
-  export { getProfile,createProfileAPI};
+  const editProfileAPI = async (token: string, formData: FormData) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    };
+  
+    try {
+      let serverADD = "http://127.0.0.1:8000/edit_profile/";
+      const response = await axios.patch(`${serverADD}`, formData, config);
+      console.log("API Response:", response.data); // Log the response data
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+
+
+export { getProfile,createProfileAPI,editProfileAPI};
 
 

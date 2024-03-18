@@ -32,8 +32,10 @@ root.render(
             <Route path="/App/*" element={<App />}>
               <Route path="Dashboard">
                 <Route index element={<Outlet />} />
+                <Route path="profile" element={<Profile />} /> 
                 <Route path="patients" element={<Patient />} />
                 <Route path="appointments" element={<Appointment />} />
+                
               </Route>
               <Route path="profile" element={<Profile />} /> 
               <Route path="editProfile" element={<EditProfile />} /> 

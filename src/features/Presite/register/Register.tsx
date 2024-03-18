@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { useNavigate } from 'react-router-dom';
-import styles from "../login/Login.module.css"
+import classes from "../register/Register.module.css"
 import { selectLogged, loginAsync, selectUserID } from '../login/loginSlice';
 import { registerAsync } from './registerSlice';
 import { useSelector } from 'react-redux';
+import { Anchor, Button, Container, Group, Paper, PasswordInput, TextInput, Title } from '@mantine/core';
+import { TextField, Typography } from '@mui/material';
+import { Header } from '../../Header/Header';
+import logoImage from "../../../images/DashBoardLogo.jpeg";
+
 
 export function Register() {
     const logged = useAppSelector(selectLogged);
@@ -59,60 +64,96 @@ export function Register() {
           setPasswordError('');
         }
       };
-    return (
-        <div className={styles.container}>
-        <div className={styles.column}>
-          <label htmlFor="username">Username:</label>
-          <input
-            id="username"
-            type="text"
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </div>
-        <div className={styles.column}>
-        {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
 
-          <label htmlFor="password" > Password:</label>
-          
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </div>
-        <div className={styles.column}>
-          <label htmlFor="firstname">First Name:</label>
-          <input
-            id="firstname"
-            type="text"
-            onChange={(e) => setfirst_name(e.target.value)}
-          />
-        </div>
-        <div className={styles.column}>
-          <label htmlFor="lastname">Last Name:</label>
-          <input
-            id="lastname"
-            type="text"
-            onChange={(e) => setlast_name(e.target.value)}
-          />
-        </div>
-        <div className={styles.column}>
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            type="email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className={styles.column}>
-   
-  </div>
-        <button className={styles.button} onClick={handleRegister}>
-          Register
-        </button>
+      const handleLogin = () => {
+        navigate('/');
+      };
+    return (
+      <div>
+          <div className={classes.header}>
+      <Container className={classes.mainSection} size="md">
+  <Group className={classes.groupContainer} gap="xs">
+    <div className={classes.logoContainer}>
+      <img
+        src={logoImage}
+        alt="Logo"
+        style={{
+          height: "90px",
+          borderRadius: "50%",
+          border: "1px solid #94b6bf",
+        }}
+      />
+    </div>
+    <div className={classes.textContainer}>
+      <div className={classes.dmSansCustom}>Therapist DashBoard App</div>
+    </div>
+  </Group>
+</Container>
       </div>
-      
+      <div >
+         <Container className={classes.formRegister} size={420} my={40} style={{backgroundColor:"#feedd3"}}>
+         <Title ta="center" className={classes.title}>
+                Please fill all of the fields
+            </Title>
+      <Paper variant="outlined" style={{ p: 4, mt: 4, borderRadius: 'md', backgroundColor:"#feedd3" }}>
+      {passwordError && <Typography color="error" mb={2}>{passwordError}</Typography>}
+      <TextInput
+  label="Username"
+  placeholder="Username"
+  required
+  value={username}
+  onChange={(event) => {
+    // Remove whitespace characters from the input value
+    const newValue = event.target.value.replace(/\s/g, '');
+    setUserName(newValue);
+  }}
+/>
+
+      <PasswordInput
+        label="Password"
+        placeholder="Your password"
+        required
+
+        mt={2}
+        value={password}
+        onChange={handlePasswordChange}
+      />
+      <TextInput
+        label="First Name"
+        placeholder="Your first name"
+        required
+
+
+        value={first_name}
+        onChange={(event) => setfirst_name(event.target.value)}
+      />
+      <TextInput
+        label="Last Name"
+        placeholder="Your last name"
+        required
+
+
+        value={last_name}
+        onChange={(event) => setlast_name(event.target.value)}
+      />
+      <TextInput
+        label="Email"
+        placeholder="Your email"
+        type="email"
+        required
+
+
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+      />
+      <Button fullWidth mt={3} variant="contained" onClick={handleRegister}>Register</Button>
+      <Anchor size="md" component="button" onClick={handleLogin}>
+        Have an Account?
+      </Anchor>
+    </Paper>
+    </Container>
+      </div>
+      </div>
 
     );
 }

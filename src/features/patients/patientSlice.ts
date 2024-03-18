@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
-import {  createPatient, getPatient, updatePaitentAPI } from './patientAPI'; // Import the new function
+import {  cancelPatientAPI, createPatient, getPatient, updatePaitentAPI } from './patientAPI'; // Import the new function
 
 
 export interface Ipatient {
@@ -15,6 +15,7 @@ export interface Ipatient {
   address: string;
   price:string;
   day_of_week:string;
+  canceled:boolean;
 }
 
 export interface IpatientState {
@@ -61,6 +62,19 @@ export const addPatient = createAsyncThunk<Ipatient, { token: string, patientDat
     }
   }
 );
+export const cancelPatientAsync = createAsyncThunk<Ipatient, { token: string, patientData: {  canceled: boolean },patientId: number, }>(
+  'patients/cancelPatient',
+  async ({ token, patientData,patientId }) => {
+    try {
+      const response = await cancelPatientAPI(token, patientData,patientId);
+      return response;
+    } catch (error) {
+      console.error('Error in cancelPatient:', error);
+      throw error;
+    }
+  }
+);
+
 export const updatePatient = createAsyncThunk<Ipatient, { token: string, patientData: Ipatient }>(
   'patients/updPatient',
   async ({ token, patientData }) => {
@@ -123,7 +137,21 @@ const patientSlice = createSlice({
         console.log('updpatient.rejected');
         state.status = 'failed';
         state.error = action.payload as string;
-      });
+      })
+      .addCase(cancelPatientAsync.fulfilled, (state, action) => {
+        const cancelPatientAsync = action.payload; // Updated patient data received from action payload
+        const existingPatientIndex = state.patients.findIndex(patient => patient.id === cancelPatientAsync.id);
+      
+        if (existingPatientIndex !== -1) {
+          // If the updated patient already exists in the state, replace it with the updated data
+          state.patients[existingPatientIndex] = cancelPatientAsync;
+        } else {
+          // If the updated patient doesn't exist in the state, add it
+          state.patients.push(cancelPatientAsync);
+        }
+        state.status = 'succeeded';
+      })
+     
   },
 });
 

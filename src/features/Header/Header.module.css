@@ -68,3 +68,17 @@
   
   
 }
+
+.hamMenu {
+  display: none;
+  @media (max-width: 769px) {
+    display: block;
+  }
+}
+.dmSansCustom {
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300; /* Adjust the weight as needed */
+  font-style: normal;
+  font-size: 20px
+}

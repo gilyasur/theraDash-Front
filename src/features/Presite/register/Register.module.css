@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  
 }
 
 .column {
@@ -10,4 +11,49 @@
 
 .label {
   margin-bottom: 5px;
+}
+
+
+.dmSansCustom {
+  font-family: "DM Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300; /* Adjust the weight as needed */
+  font-style: normal;
+  font-size: 20px
+}
+
+.header {
+  padding-top: 8px; 
+  background-color: #FFF8E3;
+  border-bottom: 1px solid #d2d8e0; 
+  margin-bottom: 30px; 
+}
+
+.mainSection {
+  padding-bottom: 8px;
+  
+}
+
+.groupContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Centers items vertically */
+}
+
+.logoContainer {
+  flex: 0 0 auto; /* Prevents logo from growing */
+}
+
+.textContainer {
+  flex: 1; /* Allows text to take remaining space */
+  margin-left: 230px;
+  
+}
+.formRegister {
+  border: 1px solid #395471;
+  border-style: groove;
+  border-radius: 25px;
+  padding-bottom: 15px;
+  padding-top: 15px;
+
 }

@@ -1,7 +1,41 @@
-.signIn {
+.title {
+    font-family:
+      Greycliff CF,
+      var(--mantine-font-family);
+    font-weight: 900;
+  }
+  .dmSansCustom {
+    font-family: "DM Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300; /* Adjust the weight as needed */
+    font-style: normal;
+    font-size: 20px
+  }
 
-}
+  .header {
+    padding-top: 8px; 
+    background-color: #FFF8E3;
+    border-bottom: 1px solid #d2d8e0; 
+    margin-bottom: 30px; 
+  }
+  
+  .mainSection {
+    padding-bottom: 8px;
+  }
 
-.signUp {
+  .groupContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Centers items vertically */
+  }
+  
+  .logoContainer {
+    flex: 0 0 auto; /* Prevents logo from growing */
+  }
+  
+  .textContainer {
+    flex: 1; /* Allows text to take remaining space */
+    margin-left: 230px;
     
-}
+  }
+  

@@ -195,7 +195,12 @@ const Appointment: React.FC = () => {
   }
 
   if (status === "failed") {
-    return <div>Error: {error}</div>;
+    return <div>
+    Error: Please Login :{error}
+    <a href="/" rel="noopener noreferrer">
+      Click here to login
+    </a>
+  </div>;
   }
 
   // Extract unique patients for the dropdown
@@ -325,7 +330,7 @@ const Appointment: React.FC = () => {
     <div style={{ textAlign: "left" }}>
       {logged ? (
         <>
-          <h1 style={{ textAlign: "center" }}>פגישות</h1>
+          <h1 style={{ textAlign: "center" }}>Appointments</h1>
           <div>
             <Modal
               opened={addAppointmentOpened}
@@ -351,7 +356,10 @@ const Appointment: React.FC = () => {
                 />
 
                 <br />
+                <span>Date of appointment</span>
+                <br/>
                 <input
+                
                   type="date"
                   placeholder="YYYY-MM-DD"
                   value={newappointmentData.occurrence_date.valueOf()} // Convert String object to primitive string
@@ -365,7 +373,7 @@ const Appointment: React.FC = () => {
                 <br></br>
 
                 <TimeInput
-                  label="time_of_day"
+
                   description="appointment time "
                   placeholder="appointment time"
                   value={newappointmentData.time_of_day}

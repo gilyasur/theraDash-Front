@@ -6,6 +6,7 @@ import appointmentReducer from '../features/Appointment/appointmentSlice';
 import patientReducer from '../features/patients/patientSlice';
 import registerReducer from '../features/Presite/register/registerSlice';
 import profileReducer from '../features/Profile/profileSlice';
+import editedProfileImageReducer from '../features/Profile/profileSlice';
 
 export const store = configureStore({
   
@@ -15,7 +16,9 @@ export const store = configureStore({
     appointment: appointmentReducer,
     patient:patientReducer,
     register:registerReducer,
-    profile:profileReducer
+    profile:profileReducer,
+    editedprofileImage: editedProfileImageReducer,
+
   },
 });
 
